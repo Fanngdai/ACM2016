@@ -2,6 +2,8 @@
 # Solution by Fanng Dai
 # ACM ICPC GNYR 2016
 
+import sys
+
 # m is the power
 # n is the value (list)
 # Doesn't work fully
@@ -41,16 +43,22 @@ def coin(power, target):
     return ans[target];
 
 try:
-    amt = int(input())
+    file = open(sys.argv[1])
+except IOError:
+    print("Unable to open the file")
+    exit()
+
+try:
+    amt = int(file.readline())
     if amt<1 or amt>1000:
         print("Value must be between 1 and 1,000 inclusive!")
         exit()
 except ValueError:
-    print("", end="")
+    print("Please enter an integer!", end="")
 else:
     for i in range(1, amt+1):
         # position (space) value (space) value
-        val = input().split()
+        val = file.readline().split()
 
         if len(val) > 3:
             print("Extra values were entered!")
@@ -84,7 +92,13 @@ else:
             print("Make sure that 3 <= m <= 100 and 3 <= n <= 10,000")
             exit()
 
-        power = list(filter(lambda x: x<=target, [ pow**i for i in range(target)]))
+        # power = list(filter(lambda x: x<=target, [ pow**i for i in range(target)]))
+        pNum = 1
+        power = []
+        while pNum<=target:
+            power.append(pNum)
+            pNum = pNum * pow
+
         result = []
         # partition(power, result, 0, [], target)
         print(str(position) + " " + str(coin(power, target)))
@@ -107,3 +121,4 @@ else:
         #     filter(lambda x: x!=1, lst)
         #     count+=1
         # print(str(position) + " " + str(len(alreadyHave)+1))
+    file.close()

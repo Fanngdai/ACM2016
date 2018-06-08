@@ -3,6 +3,7 @@
 # ACM ICPC GNYR 2016
 
 import math
+import sys
 
 def getNodes(value):
     i = value
@@ -13,16 +14,22 @@ def getNodes(value):
     return lst
 
 try:
-    amt = int(input())
+    file = open(sys.argv[1])
+except IOError:
+    print("Unable to open the file")
+    exit()
+
+try:
+    amt = int(file.readline())
     if amt<1 or amt>1000:
         print("Value must be between 1 and 1,000 inclusive!")
         exit()
 except ValueError:
-    print("", end="")
+    print("Please enter an integer!", end="")
 else:
     for i in range(1, amt+1):
         # position (space) value (space) value
-        val = input().split()
+        val = file.readline().split()
 
         if len(val) > 2:
             print("Extra value(s) were entered!")
@@ -66,3 +73,5 @@ else:
                 n = n + d
 
         print(str(position) + " " + str(n) + "/" + str(d))
+        
+    file.close()

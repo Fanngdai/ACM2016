@@ -2,6 +2,8 @@
 # Solution by Fanng Dai
 # ACM ICPC GNYR 2016
 
+import sys
+
 # Compute the sum in base 27
 def compute(value):
 	factor = [2, 4, 5, 7, 8, 10, 11, 13]
@@ -39,17 +41,22 @@ def convert(value):
 	return sum
 
 try:
-    amt = int(input())
+    file = open(sys.argv[1])
+except IOError:
+    print("Unable to open the file")
+    exit()
+
+try:
+    amt = int(file.readline())
     if amt<1 or amt>10000:
         print("Value must be between 1 and 10,000 inclusive!")
         exit()
 except ValueError:
-    print("", end="")
+    print("Please enter an integer!", end="")
 else:
 	for i in range(1,amt+1):
 		# position (space) value
-		val = input()
-		val = val.split()
+		val = file.readline().split()
 
 		if len(val) > 2:
 			print("Extra values were entered!")
@@ -84,3 +91,5 @@ else:
 			print(str(position) + " " + str(convert(value[:-1])))
 		else:
 			print(str(position) + " Invalid")
+
+	file.close()

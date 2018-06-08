@@ -2,6 +2,8 @@
 # Solution by Fanng Dai
 # ACM GNYR 2016
 
+import sys
+
 # Makes sure that all chars in value is valid
 def checker(value, base):
     possibleValue = list(range(base))
@@ -20,19 +22,24 @@ def convertToBase10(value, base):
         sum += base**i * val
     return sum
 
+try:
+    file = open(sys.argv[1])
+except IOError:
+    print("Unable to open the file")
+    exit()
+
 # Get the first number
 try:
-    amt = int(input())
+    amt = int(file.readline())
     if amt<1 or amt>10000:
         print("Value must be between 1 and 10,000 inclusive!")
         exit()
 except ValueError:
-    print("", end="")
+    print("Please enter an integer!", end="")
 else:
     for i in range(1,amt+1):
         # position (space) value
-        val = input()
-        val = val.split()
+        val = file.readline().split()
 
         if len(val) > 2:
             print("Extra values were entered!")
@@ -74,3 +81,5 @@ else:
             print("0", end='')
 
         print(" "+ str(int(value)) + " " + str(convertToBase10(value, 16)))
+
+    file.close()

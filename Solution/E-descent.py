@@ -2,6 +2,7 @@
 # Solution by Fanng Dai
 # ACM ICPC GNYR 2016
 
+import sys
 
 def permutation(N,v):
     index = N * 101 + v;
@@ -12,7 +13,13 @@ def permutation(N,v):
     return mem[index]
 
 try:
-    amt = int(input())
+    file = open(sys.argv[1])
+except IOError:
+    print("Unable to open the file")
+    exit()
+
+try:
+    amt = int(file.readline())
     if amt<1 or amt>1000:
         print("Value must be between 1 and 1,000 inclusive!")
         exit()
@@ -21,7 +28,7 @@ except ValueError:
 else:
     for i in range(1, amt+1):
         # position (space) value (space) value
-        val = input().split()
+        val = file.readline().split()
 
         if len(val) > 3:
             print("Extra values were entered!")
@@ -57,3 +64,5 @@ else:
 
         mem = {}
         print(str(position) + " " + str(permutation(N , v)))
+        
+    file.close()

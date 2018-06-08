@@ -28,7 +28,7 @@ public class TFSudoku {
         public int compareTo(Square other) {
             return availAll().size() - other.availAll().size();
         }
-        TreeSet<Character> availAll() { 
+        TreeSet<Character> availAll() {
             TreeSet<Character> result
                 = new TreeSet<Character>(availRow.get(row));
             result.retainAll(availCol.get(col));
@@ -67,7 +67,7 @@ public class TFSudoku {
                     availRow.get(row).remove(d);
                     availCol.get(col).remove(d);
                     availBlock.get(blockNum(row,col)).remove(d);
-                    if (tab[row][col].twoVals 
+                    if (tab[row][col].twoVals
                         && !Character.isDigit(tab[row][col].bottomVal))
                     {
                         toDo.add(tab[row][col]);
@@ -170,7 +170,5 @@ public class TFSudoku {
             System.out.println(d);
             processTable(tab);
         }
-
     }
-
 }

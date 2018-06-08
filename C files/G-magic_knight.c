@@ -15,7 +15,7 @@ char fixedx[66], fixedy[66];
 char movex[8] = {1, 2, 2, 1, -1, -2, -2, -1};
 char movey[8] = {-2, -1, 1, 2, 2, 1, -1, -2};
 WORD remsum[9];
- 
+
 int maxlevel;
 
 typedef struct _board_t_
@@ -27,14 +27,13 @@ typedef struct _board_t_
 	char curx;
 	char cury;
 	BYTE curmove;
-	char pad[5];
 	char board[8][8];
 } BOARD;
 
 BOARD boards[64];
 
-int CheckSums(int level)
-{
+// yee
+int CheckSums(int level) {
 	int i;
 	for(i = 0; i < 8 ; i++) {
 		if((MAGIC_SUM - boards[level].rowsum[i]) > remsum[boards[level].rowfree[i]]) {
@@ -83,10 +82,11 @@ int SolveBoard(int level)
 			continue;
 		}
 		if((fixedx[curmove+2]) >= 0) { // move after this is fixed so we better be able to get there
-			found = 0;
+      found = 0;
 			for(nextmove = 0; nextmove < 8 ; nextmove++) {
-				if(((newx+movex[nextmove]) == fixedx[curmove+2]) && 
+				if(((newx+movex[nextmove]) == fixedx[curmove+2]) &&
 					((newy+movey[nextmove]) == fixedy[curmove+2])) {
+            printf( "%d\n", level);
 					found = 1;
 					break;
 				}
@@ -114,11 +114,12 @@ int SolveBoard(int level)
 			boards[nextlevel+1].curmove = nextmove;
 			nextlevel++;
 		}
-		if((ret = SolveBoard(nextlevel)) >= 0) {
+    ret = SolveBoard(nextlevel);
+		if(ret >= 0) {
 			return ret;
 		}
-		
 	}
+
 	return -1;
 }
 
@@ -128,6 +129,8 @@ int main()
 {
 	int nprob, curprob, index;
 	int i, j, ret, vals[8], sum;
+
+
 	if(fgets(&(inbuf[0]), 255, stdin) == NULL)
 	{
 		fprintf(stderr, "Read failed on problem count\n");
@@ -138,6 +141,8 @@ int main()
 		fprintf(stderr, "Scan failed on problem count\n");
 		return -2;
 	}
+
+
 	for(curprob = 1; curprob <= nprob ; curprob++)
 	{
 		if(fgets(&(inbuf[0]), 255, stdin) == NULL)
@@ -149,11 +154,13 @@ int main()
 			fprintf(stderr, "scan failed on problem %d header\n", curprob);
 			return -4;
 		}
+    // The position
 		if(index != curprob) {
 			fprintf(stderr, "problem index %d not = expected problem %d\n",
 				index, curprob);
 			return -5;
 		}
+
 		for(i = 0; i < 8 ; i++) {
 			boards[0].rowsum[i] = boards[0].colsum[i] = 0;
 			boards[0].rowfree[i] = boards[0].colfree[i] = 8;
@@ -161,6 +168,7 @@ int main()
 		for(i = 1; i <= 65 ; i++) {
 			fixedx[i] = fixedy[i] = -1;
 		}
+
 		// read region data
 		for(i = 0; i < 8 ; i++) {
 
@@ -169,7 +177,7 @@ int main()
 				fprintf(stderr, "Read failed on row %d of problem %d\n", i, curprob);
 				return -6;
 			}
-			if(sscanf(&(inbuf[0]), "%d %d %d %d %d %d %d %d", 
+			if(sscanf(&(inbuf[0]), "%d %d %d %d %d %d %d %d",
 				&(vals[0]), &(vals[1]), &(vals[2]), &(vals[3]),
 				&(vals[4]), &(vals[5]), &(vals[6]), &(vals[7])) != 8) {
 				fprintf(stderr, "scan failed on row %d of problem %d\n", i, curprob);
@@ -191,6 +199,7 @@ int main()
 				}
 			}
 		}
+
 		remsum[0] = 0;
 		for(i = 64, j= 1, sum = 0; (i >= 1) && (j <= 8) ; i--) {
 			if(fixedx[i] < 0) {
@@ -224,5 +233,6 @@ int main()
 			printf("No solution for problem %d maxlevel %d\n", curprob, maxlevel);
 		}
 	}
+
 	return 0;
 }
