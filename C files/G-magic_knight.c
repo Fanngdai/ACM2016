@@ -57,13 +57,18 @@ int CheckSums(int level) {
 }
 
 int test = 0;
+int abc = 0;
 
 int SolveBoard(int level)
 {
+	// printf( "%d\n", level);
 	char newx, newy, move, nextmove;
 	int nextlevel, found, ret = -1;
 	int curmove = boards[level].curmove;
+	// printf( "%d\n", CheckSums(levels));
 	if(CheckSums(level) != 0) {
+		printf( "Ab\n");
+		// printf( "%d\n", abc++);
 		return -1;
 	}
 	if(level > maxlevel) maxlevel = level;
@@ -72,6 +77,8 @@ int SolveBoard(int level)
 	} else if(curmove == 63) {
 		test++;
 	}
+
+
 	for(move = 0; move < 8 ; move++) {
 		newx = boards[level].curx + movex[move];
 		newy = boards[level].cury + movey[move];
@@ -86,7 +93,6 @@ int SolveBoard(int level)
 			for(nextmove = 0; nextmove < 8 ; nextmove++) {
 				if(((newx+movex[nextmove]) == fixedx[curmove+2]) &&
 					((newy+movey[nextmove]) == fixedy[curmove+2])) {
-            printf( "%d\n", level);
 					found = 1;
 					break;
 				}
@@ -106,6 +112,7 @@ int SolveBoard(int level)
 		boards[nextlevel].curx = newx;
 		boards[nextlevel].cury = newy;
 		boards[nextlevel].curmove = nextmove;
+
 		while(fixedx[nextmove+1] >= 0) { // skip to the next board
 			nextmove++;
 			boards[nextlevel+1] = boards[nextlevel];
@@ -116,6 +123,7 @@ int SolveBoard(int level)
 		}
     ret = SolveBoard(nextlevel);
 		if(ret >= 0) {
+			// printf( "%d\n", ret);
 			return ret;
 		}
 	}

@@ -123,3 +123,5 @@ else:
             exit()
 
         sudoku(position)
+        
+    file.close()

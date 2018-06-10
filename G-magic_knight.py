@@ -2,6 +2,8 @@
 # Solution by Fanng Dai
 # ACM ICPC GNYR 2016
 
+import sys
+
 MAGIC_SUM = 260     # ((64*(64+1))/2)/8
 # char fixedx[66]
 fixedx = []
@@ -27,7 +29,7 @@ def checkSums(level):
         if (MAGIC_SUM - boards[level].rowsum[i]) > remsum[boards[level].rowfree[i]]:
             # this row can not possibly get up to MAGIC_SUM
             return -1
-        if MAGIC_SUM - boards[level].colsum[i] > remsum[boards[level].colfree[i]]:
+        if (MAGIC_SUM - boards[level].colsum[i]) > remsum[boards[level].colfree[i]]:
             # this col can not possibly get up to MAGIC_SUM
             return -2
         if (boards[level].rowsum[i] + boards[level].rowfree[i]*boards[level].curmove) > MAGIC_SUM:
@@ -57,9 +59,10 @@ def solveBoard(level):
     curmove = boards[level].curmove
 
     if checkSums(level) != 0:
-        return ret
+        return -1
     if level > maxlevel:
         maxlevel = maxlevel
+
     if curmove == 64:
         return level
     elif curmove == 63:
@@ -73,12 +76,10 @@ def solveBoard(level):
         if boards[level].board[newy][newx]>=0:
             continue
 
-
         if fixedx[curmove+2]>=0:
             found = 0
             for nextmove in range(8):
                 if ((newx+movex[nextmove]) == fixedx[curmove+2]) and ((newy+movey[nextmove]) == fixedy[curmove+2]):
-                    print(level)
                     found = 1
                     break
             if found == 0:
@@ -99,14 +100,15 @@ def solveBoard(level):
         while fixedx[nextmove+1]>=0:
             nextmove+=1
             boards[nextlevel+1] = boards[nextlevel]
-            # print(boards[nextlevel+1])
             boards[nextlevel+1].curx = fixedx[nextmove]
             boards[nextlevel+1].cury = fixedy[nextmove]
             boards[nextlevel+1].curmove = nextmove
             nextlevel+=1
 
         ret = solveBoard(nextlevel)
-        return ret if ret >= 0 else -1
+        if ret >= 0:
+            return ret
+    return -1
 
 def is_digit(n, i, index):
     try:
@@ -115,11 +117,15 @@ def is_digit(n, i, index):
         print("Read failed on row " + str(i) + " of problem " + str(index))
         exit()
 
-
+try:
+    file = open(sys.argv[1])
+except IOError:
+    print("Unable to open the file")
+    exit()
 
 # main
 try:
-    amt = int(input())
+    amt = int(file.readline())
     if amt<1 or amt>10000:
         print("Value must be between 1 and 10,000 inclusive!")
         exit()
@@ -130,7 +136,8 @@ else:
 
     for index in range(1, amt+1):
         # position (space) value (space) value
-        position = input().split().pop(0)
+        position = file.readline().split()
+        position = position[0]
 
         if position.isnumeric():
             position = int(position)
@@ -161,7 +168,7 @@ else:
 
         # read region data
         for i in range(8):
-            stdin = input().split()
+            stdin = file.readline().split()
             vals = stdin
             if len(stdin) != 8:
                 print("Read failed on row " + str(i) + " of problem " + str(index))
@@ -178,12 +185,12 @@ else:
                 # Put into board
                 boards[0].board[i][j] = val
                 if val > 0:
-                    boards[0].rowsum[i] += int(val)
-                    boards[0].colsum[j] += int(val)
+                    boards[0].rowsum[i] += val
+                    boards[0].colsum[j] += val
                     boards[0].rowfree[i] -= 1
                     boards[0].colfree[j] -= 1
-                    fixedx[val] = int(j)
-                    fixedy[val] = int(i)
+                    fixedx[val] = j
+                    fixedy[val] = i
 
         remsum.append(0)
         sum = 0
@@ -211,10 +218,11 @@ else:
         maxlevel = 0
         ret = solveBoard(0)
         if ret >= 0:
-            print(index)
             for i in range(8):
                 for j in range(8):
                     print(boards[ret].board[i][j])
                 print()     # new line
         else:
             print("No solution for problem " + str(index) + " maxlevel " + str(maxlevel))
+
+    file.close()
